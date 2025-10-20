@@ -1,0 +1,261 @@
+:root {
+    /* NEW MODERN DARK MODE PALETTE (defaults) */
+    --primary-color: #00f5d4; /* Neon Teal Accent for AAA/Primary */
+    --background-dark: #1a1a2e; /* Very Dark Indigo Background */
+    --card-dark: #2c2c40; /* Darker Card Background */
+    --text-light: #e6e6e6; /* Light Text Color */
+
+    --danger-color: #dc3545; /* Red */
+    --warning-color: #ffc107; /* Yellow */
+    --success-color: #4ade80; /* Brighter Green for AA Pass */
+}
+
+/* Apply CSS variables globally so JS can update them */
+html, body {
+    height: 100%;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Overrides Bootstrap's .text-primary to use our Neon Accent */
+.text-primary {
+    color: var(--primary-color) !important;
+}
+.text-secondary {
+    color: #b0b0d0 !important; /* Slightly lighter gray for secondary text */
+}
+.text-light {
+    color: var(--text-light) !important;
+}
+
+/* --- Custom Styling for the Editor and Metrics --- */
+.editor-container {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+/* Apply smooth transition to key elements */
+.text-editor, .metrics-card, .wcag-score, .btn, .metric-value {
+    transition: all 0.3s ease-in-out;
+}
+
+.text-editor {
+    flex-grow: 1;
+    padding: 1.5rem;
+    border: 1px solid #4a4a6b;
+    border-radius: 0.75rem;
+    resize: none;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    background-color: rgba(255,255,255,0.02);
+    color: var(--text-light);
+}
+
+/* Editor Focus Pulse Animation */
+@keyframes neon-pulse {
+    0% { box-shadow: 0 0 0 0.25rem rgba(0, 245, 212, 0.2); }
+    50% { box-shadow: 0 0 0 0.4rem rgba(0, 245, 212, 0.4); }
+    100% { box-shadow: 0 0 0 0.25rem rgba(0, 245, 212, 0.2); }
+}
+
+.text-editor:focus {
+    border-color: var(--primary-color);
+    animation: neon-pulse 1.5s infinite alternate; /* Apply pulse on focus */
+    outline: none;
+}
+
+.metrics-card {
+    background-color: var(--card-dark);
+    color: var(--text-light);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    padding: 1.5rem;
+    height: 100%;
+    border: 1px solid #4a4a6b;
+}
+.metrics-card h5, .metrics-card h6 {
+    color: var(--text-light) !important;
+}
+.metric-item {
+    border-bottom: 1px solid #4a4a6b;
+    color: var(--text-light);
+}
+
+/* Metric Value Flash Animation */
+@keyframes metric-flash {
+    0% { color: var(--primary-color); }
+    100% { color: var(--text-light); }
+}
+.metric-value.flash {
+    animation: metric-flash 0.5s ease-out;
+    font-size: 1.1rem;
+}
+
+/* WCAG Score Gauge (Visual Highlight & Animation) */
+.wcag-score {
+    font-size: 1.25rem;
+    font-weight: 800;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--background-dark);
+    text-align: center;
+    margin-top: 0.75rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+.wcag-score:hover {
+    transform: scale(1.02);
+}
+
+/* WCAG Fail Animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); box-shadow: 0 0 5px var(--danger-color); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+.wcag-fail {
+    background-color: var(--danger-color);
+    color: var(--text-light);
+    animation: shake 0.8s ease-in-out;
+}
+.wcag-warn { background-color: var(--warning-color); color: var(--background-dark) !important; }
+.wcag-pass { background-color: var(--success-color); color: var(--background-dark) !important; }
+.wcag-aaa {
+    background-color: var(--primary-color);
+    color: var(--background-dark);
+}
+
+/* --- Readability Gauge Styling --- */
+.readability-gauge {
+    height: 20px;
+    background: linear-gradient(to right,
+        var(--danger-color) 0%,
+        var(--danger-color) 25%,
+        var(--warning-color) 40%,
+        var(--primary-color) 50%,
+        var(--warning-color) 60%,
+        var(--danger-color) 75%,
+        var(--danger-color) 100%
+    );
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.readability-pointer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background-color: var(--text-light);
+    border: 1px solid var(--background-dark);
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: left 0.5s ease-out;
+}
+
+/* Input Controls Row Styling */
+.controls-row {
+    background-color: #212130;
+    border: 1px solid #4a4a6b;
+}
+
+/* Button Animations */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--background-dark);
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0, 245, 212, 0.3);
+}
+.btn-primary:hover {
+    background-color: #33ffeb;
+    border-color: #33ffeb;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 245, 212, 0.5);
+}
+.btn-outline-secondary {
+    color: var(--text-light);
+    border-color: #4a4a6b;
+}
+.btn-outline-secondary:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+.btn-sm i {
+    margin-right: 5px;
+}
+
+/* Color Blindness Filter */
+.color-blindness-active .text-editor {
+    filter: grayscale(80%) sepia(50%) hue-rotate(-20deg) contrast(1.2);
+}
+
+/* WCAG Problem Indicator Pulse */
+@keyframes pulse-danger {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.problem-indicator {
+    color: var(--danger-color);
+    margin-left: 0.5rem;
+    font-size: 1.25rem;
+    display: none; /* Hidden by default */
+    animation: pulse-danger 1s infinite alternate;
+}
+
+/* Skeletal Loading State for AI Output (Improved UX) */
+.skeletal-loading {
+    padding: 10px;
+}
+.skeletal-loading > div {
+    height: 10px;
+    background-color: #4a4a6b;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    animation: loading-shimmer 1.5s infinite linear;
+}
+.skeletal-loading > div:last-child {
+    width: 70%;
+    margin-bottom: 0;
+}
+@keyframes loading-shimmer {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .editor-container {
+        height: 50vh;
+        margin-bottom: 1rem;
+    }
+    .metrics-card {
+        height: auto;
+    }
+}
+/* ... your existing CSS above ... */
+
+/* Grammar suggestion highlight */
+.grammar-error {
+    color: var(--danger-color);
+    font-weight: 600;
+}
+
+/* Keep existing styles untouched */
+

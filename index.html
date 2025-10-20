@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ClarityCheck Editor (WCAG & Readability)</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- LINK TO YOUR CUSTOM STYLES -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <h1 class="text-center mb-4 text-primary fw-bold">
+            <i class="bi bi-pencil-square me-2"></i> ClarityCheck Editor
+        </h1>
+        <div class="row g-4">
+            <!-- Left Column: Text Editor -->
+            <div class="col-lg-8" id="editor-wrapper">
+                <div class="editor-container">
+                    <textarea id="text-editor" class="text-editor" placeholder="Start typing your content here... The editor will check readability, contrast, and grammar in real time."></textarea>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3 p-3 controls-row rounded-3 shadow-lg flex-wrap">
+                        <div class="d-flex align-items-center me-3 mb-2 mb-sm-0">
+                            <label for="fg-color" class="form-label mb-0 me-2 fw-semibold text-light">
+                                <i class="bi bi-paint-bucket"></i> Text Color:
+                            </label>
+                            <input type="color" id="fg-color" class="form-control form-control-color" value="#E6E6E6" title="Choose text color">
+                            <i id="fg-problem-icon" class="bi bi-exclamation-triangle-fill problem-indicator" title="Failing contrast"></i>
+                        </div>
+                        <div class="d-flex align-items-center me-3 mb-2 mb-sm-0">
+                            <label for="bg-color" class="form-label mb-0 me-2 fw-semibold text-light">
+                                <i class="bi bi-palette"></i> Background Color:
+                            </label>
+                            <input type="color" id="bg-color" class="form-control form-control-color" value="#1a1a2e" title="Choose background color">
+                            <i id="bg-problem-icon" class="bi bi-exclamation-triangle-fill problem-indicator" title="Failing contrast"></i>
+                        </div>
+                        <button class="btn btn-outline-secondary btn-sm mb-2 mb-sm-0" id="color-blindness-toggle">
+                            <i class="bi bi-eye-slash"></i> Toggle Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Real-time Metrics -->
+            <div class="col-lg-4">
+                <div class="metrics-card">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary"><i class="bi bi-check-circle-fill"></i> Real-time Accessibility Metrics</h5>
+
+                    <!-- Contrast Metrics -->
+                    <h6 class="fw-semibold text-secondary mt-3"><i class="bi bi-droplet-half"></i> WCAG Contrast Ratio</h6>
+                    <div class="wcag-score" id="wcag-gauge">Ratio: N/A</div>
+                    <small class="text-light" id="wcag-status">Adjust colors in the editor settings below.</small>
+
+                    <!-- Granular Fix Options -->
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-sm btn-outline-success w-50 d-none" id="fix-darker-btn"><i class="bi bi-moon"></i> Nudge Darker</button>
+                        <button class="btn btn-sm btn-outline-success w-50 d-none" id="fix-lighter-btn"><i class="bi bi-sun"></i> Nudge Lighter</button>
+                    </div>
+
+                    <h5 class="fw-bold mb-3 mt-4 border-bottom pb-2 text-primary"><i class="bi bi-book"></i> Readability Scores</h5>
+
+                    <!-- NEW READABILITY GAUGE -->
+                    <h6 class="fw-semibold text-secondary mt-3"><i class="bi bi-graph-up"></i> Grade Level Visualizer</h6>
+                    <div class="readability-gauge" title="Red: Too simple/complex. Teal: Ideal for wide audience.">
+                        <div id="readability-pointer" class="readability-pointer"></div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-secondary mt-1">
+                        <span>Beginner (Grade 0)</span>
+                        <span>Expert (Grade 15+)</span>
+                    </div>
+
+                    <!-- Readability Metrics -->
+                    <div class="metric-item mt-3">
+                        <strong><i class="bi bi-mortarboard"></i> Reading Grade Level:</strong>
+                        <span id="grade-level" class="metric-value">N/A</span>
+                    </div>
+                    <div class="metric-item">
+                        <strong><i class="bi bi-speedometer"></i> Flesch-Kincaid Score:</strong>
+                        <span id="fk-score" class="metric-value">N/A</span>
+                    </div>
+                    <div class="metric-item">
+                        <strong><i class="bi bi-hash"></i> Word Count:</strong>
+                        <span id="word-count" class="metric-value">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <strong><i class="bi bi-chat-left-text"></i> Sentence Count:</strong>
+                        <span id="sentence-count" class="metric-value">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <strong><i class="bi bi-clock"></i> Est. Reading Time:</strong>
+                        <span id="reading-time" class="metric-value">0 min</span>
+                    </div>
+
+                    <!-- Grammar & AI Suggestions -->
+                    <h5 class="fw-bold mb-3 mt-4 border-bottom pb-2 text-primary"><i class="bi bi-lightbulb"></i> Suggestions</h5>
+                    <div id="improvement-suggestions" class="p-3 border rounded-3 controls-row" style="min-height: 80px;">
+                        <small class="text-secondary">Start typing and suggestions will appear here based on grammar, clarity, sentence length, and structure.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- LINK TO YOUR APPLICATION LOGIC -->
+    <script src="script.js"></script>
+</body>
+</html>
